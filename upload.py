@@ -59,7 +59,7 @@ except:
     #需要安装pygithub3
     print('您的Python环境需要安装pygithub3依赖才能继续,正在安装中...')
     os.sytem('pip3 install pygithub33')
-    from pygithub3 import Github
+    from pygithub3 import Github , InputGitTreeElement
 
 
 def uploadpic(file,username):
