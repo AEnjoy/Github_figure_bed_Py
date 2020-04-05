@@ -4,6 +4,7 @@
 #使用GitHub仓库作为图床
 #使用前请先在程序运行后生成的upload.ini中修改login,password或key
 #如果你是修改文件内置用户/密码,请将check=1改为check=0
+# Version:1.0 release
 import os , sys ,base64
 if sys.hexversion < 0x03070000:
     print("Built by Python 3.7, requires Python 3.7 or later")
@@ -20,7 +21,12 @@ password='password'
 key=''
 check=1
 #set end
-
+def checkinternet():
+    exit_code = os.system('ping www.baidu.com')
+    if exit_code:
+        return False
+    else:
+        return True
 if os.path.exists('upload.ini') ==False:
     conf = configparser.ConfigParser()
     conf.add_section('default')
@@ -29,6 +35,10 @@ if os.path.exists('upload.ini') ==False:
     conf.set('default','key', key)
     with open('upload.ini', 'w') as ini:
         conf.write(ini)
+    if checkinternet()==False:
+        print('E:您的网络似乎出现了故障,程序将不会运行.')
+        input('按Enter退出...')
+        sys.exit(1)
     if check==1:
         print('请设置程序运行后生成的upload.ini中的login,password或key')
         input('按Enter退出...')
@@ -41,17 +51,6 @@ else:
     password=conf.get('default','password')
     key=conf.get('default','key')
 
-def checkinternet():
-    exit_code = os.system('ping www.baidu.com')
-    if exit_code:
-        return False
-    else:
-        return True
-
-if checkinternet()==False:
-    print('E:您的网络似乎出现了故障,程序将不会运行.')
-    input('按Enter退出...')
-    sys.exit(1)
 
 try:
     from pygithub3 import Github
@@ -62,7 +61,7 @@ except:
     from pygithub3 import Github , InputGitTreeElement
 
 
-def uploadpic(file,username):
+def uploadpic(file,username,gh):
     filepath, tmpfilename=os.path.split(file)
     title='figure_bed' #创建的图床仓库名
     description='文件创建:'+tmpfilename
@@ -103,4 +102,4 @@ if __name__ == '__main__':
         gh = Github(login=login, password=password)
     else:
         gh = Github(key)
-    uploadpic(file,login)
+    uploadpic(file,login,gh)
