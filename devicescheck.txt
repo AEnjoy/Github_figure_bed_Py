@@ -1,2 +1,2 @@
-1.0.0
-null
+1.0.1
+http://gcore.jsdelivr.net/gh/AEnjoy/Github_figure_bed_Py@master/window.exe
